@@ -5,6 +5,13 @@ from pyspark.sql.types import StringType, FloatType, StructType, StructField, In
 import pandas as pd
 from pyspark.sql.functions import udf
 
+negation_words = ["not", "never", "no", "without", "lack", "don't", "isn't", "wasn't", "haven't", "cannot", "neither", "nothing", "nowhere", "nevertheless", "hardly", "scarcely", "barely", "yet", "longer", "again", "now", "anymore", "bit", "at all"]
+intensifier_words = ["extremely", "utterly", "completely", "absolutely", "totally", "unbelievably", "overwhelmingly", "terribly", "wholly", "entirely", "truly", "greatly", "profoundly", "deeply", "intensely", "strongly", "heavily", "solidly", "well", "fully", "amazingly", "fantastically", "remarkably", "awfully", "terrifically"]
+modality_words = ["must", "should", "need", "have", "required", "necessary", "mustn't", "shouldn't", "don't", "not", "could", "might", "may", "can", "will", "would", "shall", "ought", "used", "dare", "better", "be", "to", "got"]
+less_modality_words = ["probably", "likely", "perhaps", "maybe", "occasionally", "sometimes", "partly", "to some extent", "somewhat"]
+less_intensifier_words = ["fairly", "moderately", "reasonably", "pretty", "kind of", "sort of", "fair amount", "fair bit", "half", "a bit", "a little", "a touch", "a smidgen", "a shade", "a dash", "a pinch"]
+
+
 '''
 Emotion Dataset:
 Label - Emotion
@@ -61,13 +68,29 @@ def annotate_emotion(text, lexicon_dict):
     emotion = "neutral"
     intensity = 0.0
     words = text.lower().split()
+    is_negated = False
+    intensifier = 1.0
+    modality = 1.0
 
     for word in words:
         if word in lexicon_dict:
             current_emotion, current_intensity = lexicon_dict[word]
-            if current_intensity > intensity:
+            if word in negation_words:
+                is_negated = True
+            elif word in intensifier_words:
+                intensifier *= 2
+            elif word in less_intensifier_words:
+                intensifier *= 0.5
+            elif word in less_modality_words:
+                modality *= 0.5
+            elif word in modality_words:
+                modality *= 2
+            if current_intensity * intensifier > intensity:
                 emotion = current_emotion
-                intensity = current_intensity
+                if is_negated:
+                    intensity = -current_intensity * intensifier * modality
+                else:
+                    intensity = current_intensity * intensifier * modality
 
     return (emotion, intensity)
 
