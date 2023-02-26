@@ -1,60 +1,33 @@
-import React, { useEffect, useRef } from "react";
-import { Pie } from "react-chartjs-2";
-import { Chart } from 'chart.js';
+import React from 'react';
+import { VictoryPie, VictoryLabel } from 'victory';
 
-const SentimentPieChart = ({ sentiments }) => {
-  const chartRef = useRef(null);
+const PieChart = ({ sentiments,height,width }) => {
+  const COLORS = ["#ff7f0e", "#1f77b4", "#2ca02c", "#d62728", "#9467bd"];
+  
+  const emotions = sentiments.reduce((acc, { Emotion }) => {
+    acc[Emotion] = (acc[Emotion] || 0) + 1;
+    return acc;
+  }, {});
 
-  useEffect(() => {
-    Chart.register({
-      ArcElement: Chart.elements.Arc,
-      DoughnutElement: Chart.elements.Doughnut,
-    });
-  }, []);
-  // Create an object to count the occurrences of each emotion
-  const emotionCounts = {
-    Sad: 0,
-    Angry: 0,
-    Fear: 0,
-    Surprise: 0,
-    Happy: 0,
-  };
-
-  // Count the occurrences of each emotion
-  sentiments.forEach((sentiment) => {
-    emotionCounts[sentiment.Emotion]++;
-  });
-
-  // Create an array of data for the chart
-  const data = {
-    labels: Object.keys(emotionCounts),
-    datasets: [
-      {
-        data: Object.values(emotionCounts),
-        backgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#4BC0C0",
-          "#FF9F40",
-        ],
-        hoverBackgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#4BC0C0",
-          "#FF9F40",
-        ],
-      },
-    ],
-  };
+  const formattedData = Object.keys(emotions).map(emotion => ({
+    x: emotion,
+    y: emotions[emotion]
+  }));
 
   return (
-    <div>
-      <h2>Sentiment Pie Chart</h2>
-      <Pie data={data} />
+    <div style={{ width: `${width}px`, height: `${height}px` }}>
+      <h2>Sentiment Analysis Chart</h2>
+      <VictoryPie
+        data={formattedData}
+        colorScale={COLORS}
+        innerRadius={60}
+        padding={50}
+        labelRadius={90}
+        labels={({ datum }) => `${datum.x}: ${datum.y}`}
+        labelComponent={<VictoryLabel style={{ fill: 'white', fontWeight: 'bold' }}/>}
+      />
     </div>
   );
 };
 
-export default SentimentPieChart;
+export default PieChart;
