@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 
-const useSentiment = (keyword, setIsLoading) => {
+const useSentiment = (keyword, setIsLoading, setLoadingMessage) => {
   const [tweets, setTweets] = useState([]);
   const [sentiments, setSentiments] = useState([]);
 
   useEffect(() => {
     const fetchTweets = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/get_tweets?keyword=${keyword}`,{
+        setLoadingMessage('Fetching tweets...');
+        const response = await fetch(`http://127.0.0.1:8000/get_tweets?keyword=${keyword.text}`,{
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }});
+        setLoadingMessage('Analyzing tweet sentiments...')
         const data = await response.json();
         setTweets(data);
         analyzeSentiments(data);
@@ -25,6 +27,7 @@ const useSentiment = (keyword, setIsLoading) => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(tweets),
         });
+        setLoadingMessage('Fetching sentiments...')
         let data = await response.json();
         data = JSON.parse(data);
         setSentiments(data);
@@ -33,7 +36,7 @@ const useSentiment = (keyword, setIsLoading) => {
         console.error(error);
       }
     };
-    if(!!keyword)
+    if(!!Object.keys(keyword).length)
     fetchTweets();
   }, [keyword]);
 
