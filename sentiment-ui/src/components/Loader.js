@@ -1,8 +1,12 @@
-const Loader = ({children, isLoading}) => {
+const Loader = ({children, isLoading, loadingMessage}) => {
     if(!isLoading) return children
-    else return (<div className="spinner-border" id="spinner" role="status">
-    <span className="sr-only"></span>
-  </div>)
+    else return (
+      <div id="spinner">
+      <span>{loadingMessage}</span>
+      <div className="spinner-border" role="status">
+    </div>
+      </div>
+      )
 }
 
 export default Loader
