@@ -1,38 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import WordCloud from 'react-wordcloud';
 
 const TweetWordCloud = ({ tweets }) => {
-  console.log('Inside TweetWordCloud')
+  const [wordCloudData, setWordCloudData] = useState([]);
+
+  useEffect(() => {
+    const worker = new Worker('./wordcloud.worker.js');
+
+    worker.onmessage = (event) => {
+      setWordCloudData(event.data);
+    };
+
+    worker.postMessage(tweets);
+    
+    return () => {
+      worker.terminate();
+    };
+  }, [tweets]);
+
   const options = {
     rotations: 0,
     fontSizes: [20, 80],
     colors: ['#1DA1F2', '#17BF63', '#F45D22', '#794BC4', '#FFAD1F'],
     enableTooltip: false,
     deterministic: true,
-  };
-
-  const stopWords = ['a','&amp;','any',"i'll", 'an', 'and', 'are', 'as', 'at', 'be', 'but', 'by', 'for', 'if', 'in', 'into', 'is', 'it', 'no', 'not', 'of', 'on', 'or', 'such', 'that', 'the', 'their', 'then', 'there', 'these', 'they', 'this', 'to', 'was', 'will', 'with'];
-
-  const words = tweets
-    .join(' ')
-    .split(/\s+/)
-    .reduce((acc, word) => {
-      const lowerCaseWord = word.toLowerCase();
-      if (lowerCaseWord.length > 2 && !stopWords.includes(lowerCaseWord) && !lowerCaseWord.startsWith('@') && !lowerCaseWord.startsWith('#') && !lowerCaseWord.startsWith('http')) {
-        acc[lowerCaseWord] = acc[lowerCaseWord] ? acc[lowerCaseWord] + 1 : 1;
+    // add willReadFrequently attribute to canvas element
+    // this will silence the console message
+    callbacks: {
+      onWordCloudDraw: (words, bounds) => {
+        const canvas = document.querySelector('.wordcloud-canvas');
+        canvas.setAttribute('willReadFrequently', 'false');
       }
-      return acc;
-    }, {});
+    }
+  };
+  
 
-  const wordCloudData = Object.keys(words).map((word) => ({
-    text: word,
-    value: words[word],
-  }));
-
-  return (<div>
-    <h1>Word Cloud</h1>
-    <WordCloud words={wordCloudData} options={options} />
-    </div>)
+  return (
+    <div>
+      <h3>Word Cloud</h3>
+      <div>
+        <WordCloud words={wordCloudData} options={options} />
+      </div>
+    </div>
+  );
 };
 
 export default TweetWordCloud;
