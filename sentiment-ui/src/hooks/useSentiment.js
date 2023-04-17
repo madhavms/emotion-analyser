@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 const useSentiment = (keyword, setIsLoading, setLoadingMessage) => {
   const [tweets, setTweets] = useState([]);
   const [sentiments, setSentiments] = useState([]);
-
+  console.log("keyword=",keyword)
   useEffect(() => {
     const fetchTweets = async () => {
       try {
@@ -28,8 +28,8 @@ const useSentiment = (keyword, setIsLoading, setLoadingMessage) => {
           body: JSON.stringify(tweets),
         });
         setLoadingMessage('Fetching sentiments...')
+        console.log('response=',response)
         let data = await response.json();
-        data = JSON.parse(data);
         setSentiments(data);
         setIsLoading(false);
       } catch (error) {
