@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+#spinner{
+  position: absolute;
+  top: 50%;
+  left:45%;
+}
