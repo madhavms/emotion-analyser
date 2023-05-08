@@ -14,7 +14,8 @@ uvicorn main:app --reload
 
 ## Starting up Emotion Analyser User Interface
 
-```cd sentiment-ui
+```
+cd sentiment-ui
 
 npm install
 
