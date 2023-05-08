@@ -5,6 +5,7 @@ import torch
 from fastapi import FastAPI, HTTPException
 from starlette.responses import JSONResponse
 from pathlib import Path
+from tweepy import OAuthHandler
 import tensorflow as tf
 import os
 import tweepy

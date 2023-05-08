@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import useSentiment from './hooks/useSentiment';
 import Loader from './components/Loader';
-import { TextField, Button, Typography } from '@mui/material';
+import { TextField, Button } from '@mui/material';
 import { Box } from '@mui/system';
 import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
@@ -13,7 +13,6 @@ function App() {
   const [loadingMessage, setLoadingMessage] = useState('');
   const [text, setText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [displayComponent, setDisplayComponent] = useState('');
 
   const [tweets, sentiments] = useSentiment(keyword, setIsLoading, setLoadingMessage);
 
@@ -23,10 +22,6 @@ function App() {
       setKeyword({ text });
       setIsLoading(true);
     }
-  };
-
-  const handleDisplayComponent = (component) => {
-    setDisplayComponent(component);
   };
 
   return (

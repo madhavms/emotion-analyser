@@ -34,9 +34,13 @@ def annotate_emotion(text):
     print('Entered annotate_emotion')
     prediction = te.get_emotion(text)
     intensity = max(prediction.values())
-    emotion = next(key for key, value in prediction.items() if value == intensity)
+    if intensity == 0:
+        emotion = "Neutral"
+    else:
+        emotion = next(key for key, value in prediction.items() if value == intensity)
     print(f'Text: {text}, Emotion: {emotion}, Intensity: {intensity}')
     return (emotion, intensity)
+
 
 annotate_emotion_udf = udf(lambda text: annotate_emotion(text), returnType=StructType([
     StructField("emotion", StringType()),

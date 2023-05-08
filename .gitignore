@@ -1,5 +1,7 @@
-
-Dataset/labelled_data.csv
-Dataset/labelled_data_without_negation.csv
-Dataset/lexicon.csv
-Dataset/unannotated_data.csv
+models/
+Dataset/
+.DS_Store
+__pycache__
+fix_lexicon_data.py
+NRC-Emotion-Intensity-Lexicon-v1.txt
+.env

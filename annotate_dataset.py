@@ -27,24 +27,19 @@ Label - Emotion
 '''
 
 def map_emotion_to_label(emotion):
-    if emotion == "joy":
-        return 1
-    elif emotion == "neutral":
-        return 2
-    elif emotion == "trust":
-        return 3
-    elif emotion == "anger":
-        return 4
-    elif emotion == "fear":
-        return 5
-    elif emotion == "surprise":
-        return 6
-    elif emotion == "sadness":
-        return 7
-    elif emotion == "anticipation":
-        return 8
-    elif emotion == "disgust":
-        return 9
+    switch = {
+        "joy": 1,
+        "neutral": 2,
+        "trust": 3,
+        "anger": 4,
+        "fear": 5,
+        "surprise": 6,
+        "sadness": 7,
+        "anticipation": 8,
+        "disgust": 9
+    }
+    return switch.get(emotion, None)
+
 
 map_emotion_to_label_udf = udf(map_emotion_to_label, IntegerType())
 
@@ -94,21 +89,23 @@ def annotate_emotion(text, lexicon_dict):
 
     return (emotion, intensity)
 
-annotate_emotion_udf = udf(lambda text: annotate_emotion(text, lexicon_dict), returnType=StructType([
-    StructField("emotion", StringType()),
-    StructField("intensity", FloatType())
-]))
+# annotate_emotion_udf = udf(lambda text: annotate_emotion(text, lexicon_dict), returnType=StructType([
+#     StructField("emotion", StringType()),
+#     StructField("intensity", FloatType())
+# ]))
 
-annotated_data_df = unannotated_data_df.withColumn("emotion_intensity", annotate_emotion_udf(unannotated_data_df._c5))
-annotated_data_df = annotated_data_df.select("*", F.col("emotion_intensity.emotion").alias("Emotion"), F.col("emotion_intensity.intensity").alias("Intensity"))
-annotated_data_df = annotated_data_df.drop("emotion_intensity")
-annotated_data_df = annotated_data_df.drop("_c1")
-annotated_data_df = annotated_data_df.drop("_c0")
-annotated_data_df = annotated_data_df.drop("_c3")
-annotated_data_df = annotated_data_df.withColumnRenamed("_c5", "Tweet Text")
-annotated_data_df = annotated_data_df.withColumnRenamed("_c2", "Date Time")
-annotated_data_df = annotated_data_df.withColumnRenamed("_c4", "User ID")
-annotated_data_df = annotated_data_df.withColumn("Emotion Label", map_emotion_to_label_udf("Emotion"))
-annotated_data_df = annotated_data_df.drop("Emotion")
+# annotated_data_df = unannotated_data_df.withColumn("emotion_intensity", annotate_emotion_udf(unannotated_data_df._c5))
+# annotated_data_df = annotated_data_df.select("*", F.col("emotion_intensity.emotion").alias("Emotion"), F.col("emotion_intensity.intensity").alias("Intensity"))
+# annotated_data_df = annotated_data_df.drop("emotion_intensity")
+# annotated_data_df = annotated_data_df.drop("_c1")
+# annotated_data_df = annotated_data_df.drop("_c0")
+# annotated_data_df = annotated_data_df.drop("_c3")
+# annotated_data_df = annotated_data_df.withColumnRenamed("_c5", "Tweet Text")
+# annotated_data_df = annotated_data_df.withColumnRenamed("_c2", "Date Time")
+# annotated_data_df = annotated_data_df.withColumnRenamed("_c4", "User ID")
+# annotated_data_df = annotated_data_df.withColumn("Emotion Label", map_emotion_to_label_udf("Emotion"))
+# annotated_data_df = annotated_data_df.drop("Emotion")
 
-annotated_data_df.coalesce(1).write.csv("./Dataset/annotated_data.csv", header=True)
+# annotated_data_df.coalesce(1).write.csv("./Dataset/annotated_data.csv", header=True)
+
+print(annotate_emotion("Put vacation photos online a few yrs ago. PC crashed, and now I forget the name of the site", lexicon_dict))
