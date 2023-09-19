@@ -4,6 +4,18 @@ The Emotion Analysis System for E-commerce is a machine learning application tha
 
 ![System_Architecture.png](https://raw.githubusercontent.com/madhavms/emotion-analyser/main/images/Dissertation_Architecture.drawio.png)
 
+## Emotion Analyser User Interface
+
+### User Interface
+![emotion_analyser_app.png](https://raw.githubusercontent.com/madhavms/emotion-analyser/main/images/emotion_analyser_app.png)
+
+### Emotion Insights
+![insights.png](https://raw.githubusercontent.com/madhavms/emotion-analyser/main/images/insights.png)
+
+### Pie Chart Visualisation
+![pie_Chart.png](https://raw.githubusercontent.com/madhavms/emotion-analyser/main/images/pie_Chart.png)
+
+
 ## Google Colab Source Code for Emotion Prediction Models
 
 1. [Source code for BERT Model](https://colab.research.google.com/drive/12-apsJFd9m2SVO6-p43ynZuI6ZppNM-i?usp=sharing)
