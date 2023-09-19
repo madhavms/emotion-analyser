@@ -4,6 +4,12 @@ The Emotion Analysis System for E-commerce is a machine learning application tha
 
 ![System_Architecture.png](https://raw.githubusercontent.com/madhavms/emotion-analyser/main/images/Dissertation_Architecture.drawio.png)
 
+## Google Colab Source Code for Emotion Prediction Models
+
+1. [Source code for BERT Model](https://colab.research.google.com/drive/12-apsJFd9m2SVO6-p43ynZuI6ZppNM-i?usp=sharing)
+2. [Source code for CNN Model](https://colab.research.google.com/drive/1yiCkwZ3tbfafWkb7KJYn_ImLrQhnYmnJ?usp=sharing)
+
+
 # Getting Started
 To get started with the Emotion Analysis System, follow these steps:
 
